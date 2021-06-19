@@ -5,7 +5,10 @@ const uploadFile = require('../../middlewares/uploads')
 const userController = require('./userController')
 
 Route.get(
-  '/:id',
+  '/',
+  userController.getDataAll)
+Route.get(
+  '/by-id/:id',
   userController.getDataById)
 Route.patch(
   '/img/:id',

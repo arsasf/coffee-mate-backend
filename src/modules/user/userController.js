@@ -8,7 +8,14 @@ const fs = require('fs')
 require('dotenv').config()
 
 module.exports = {
-
+  getDataAll: async (req, res) => {
+    try {
+      const result = await userModel.getDataAll()
+      return helper.response(res, 200, 'Succes Get All Data Product', result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   updateImage: async (req, res) => {
     try {
       const { id } = req.params
@@ -59,13 +66,19 @@ module.exports = {
       const { id } = req.params
       const getDataId = await userModel.getDataById(id)
       // console.log(getDataId[0])
-      let { userName, userPhone, userAddress, userGender, userBirth } = req.body
+      let { userDisplay, userEmail, userName, userPhone, userAddress, userGender, userBirth } = req.body
       console.log(req.body)
+      if (userEmail === '') {
+        userEmail = getDataId[0].user_email
+      }
       if (userName === '') {
         userName = getDataId[0].user_name
       }
       if (userPhone === '') {
         userPhone = getDataId[0].user_phone
+      }
+      if (userDisplay === '') {
+        userDisplay = getDataId[0].user_display_name
       }
       if (userAddress === '') {
         userAddress = getDataId[0].user_address
@@ -81,6 +94,8 @@ module.exports = {
       }
 
       const setData = {
+        user_email: userEmail,
+        user_display_name: userDisplay,
         user_name: userName,
         user_phone: userPhone,
         user_address: userAddress,

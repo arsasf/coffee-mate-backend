@@ -1,6 +1,13 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
+  getDataAll: () => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * fROM user', (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      })
+    })
+  },
   getDataById: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
