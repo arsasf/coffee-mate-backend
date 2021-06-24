@@ -83,17 +83,13 @@ module.exports = {
         user_verified: '1'
       }
       const getUserId = await authModel.getUserDataConditions(id)
-      const result = await authModel.updateverifiedUser(setData, id)
+      await authModel.updateverifiedUser(setData, id)
       if (getUserId.length > 0) {
-        // return helper.response(
-        //   res,
-        //   200,
-        //   'Success! Your Account Has Been Verified.'
-        // )
-        return res.render('index.ejs', {
-          data: result,
-          user: getUserId[0]
-        })
+        return helper.response(
+          res,
+          200,
+          'Success! Your Account Has Been Verified.'
+        )
       } else {
         return helper.response(res, 404, `Data By Id ${id} Not Found`, null)
       }
@@ -135,7 +131,6 @@ module.exports = {
   },
 
   reqOtp: async (req, res) => {
-    console.log(req.body)
     try {
       const { email } = req.body
       const otp = Math.floor(1000 + Math.random() * 9000)

@@ -5,9 +5,8 @@ const productController = require('./productController')
 const { authentication, isAdmin } = require('../../middlewares/auth')
 // const redisMiddleware = require('../../middlewares/redis')
 
-Route.get('/by-id/:id', productController.getDataById)
-Route.get('/', productController.getAllProduct)
-
+Route.get('/', authentication, productController.getAllProduct)
+Route.get('/by-id/:id', authentication, productController.getDataById)
 Route.patch(
   '/img/:id',
   authentication,
@@ -15,7 +14,6 @@ Route.patch(
   uploadFile,
   productController.updateImage
 )
-
 Route.post(
   '/',
   authentication,
@@ -23,7 +21,6 @@ Route.post(
   uploadFile,
   productController.postProduct
 )
-
 Route.patch(
   '/:id',
   authentication,

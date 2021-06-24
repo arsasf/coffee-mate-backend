@@ -1,22 +1,22 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-  getDataAll: (limit, offset, keyword, sort, category) => {
+  getDataAll: (limit, offset, keyword, sort) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM product WHERE product_name LIKE ? AND product_category LIKE ? ORDER BY ${sort} LIMIT ? OFFSET ?`,
-        [keyword, category, limit, offset],
+        `SELECT * FROM product WHERE product_name LIKE "%"?"%" ORDER BY ${sort} LIMIT ? OFFSET ?`,
+        [keyword, limit, offset],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
     })
   },
-  getDataCount: (keyword, category, sort) => {
+  getDataCount: (keyword, sort) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT COUNT(*) AS total FROM product WHERE product_name LIKE ? AND product_category LIKE ? ORDER BY ${sort}`,
-        [keyword, category],
+        `SELECT COUNT(*) AS total FROM product WHERE product_name LIKE "%"?"%" ORDER BY ${sort}`,
+        keyword,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
@@ -57,7 +57,6 @@ module.exports = {
     })
   },
   updateData: (setData, id) => {
-    // console.log(setData)
     return new Promise((resolve, reject) => {
       connection.query(
         'UPDATE product SET ? WHERE product_id = ?',
@@ -79,7 +78,7 @@ module.exports = {
   getDataByCategory: (keyword, category, limit, offset, orderBy) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM product WHERE product_name LIKE "%"?"%" AND product_category LIKE "%"?"%" ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
+        `SELECT * FROM product WHERE product_name LIKE "%"?"%" AND product_category = ? ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
         [keyword, category, limit, offset],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
@@ -90,7 +89,7 @@ module.exports = {
   countData: (keyword, category) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT COUNT(*) AS total FROM product WHERE product_name LIKE "%"?"%" AND product_category LIKE "%"?"%"',
+        'SELECT COUNT(*) AS total FROM product WHERE product_name LIKE "%"?"%" AND product_category = ?',
         [keyword, category],
         (error, result) => {
           !error ? resolve(result[0].total) : reject(new Error(error))
