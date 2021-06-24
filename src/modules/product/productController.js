@@ -9,30 +9,46 @@ require('dotenv').config()
 module.exports = {
   getAllProduct: async (req, res) => {
     try {
-      let { page, lim, sort, keyword, category } = req.query
-      lim = lim ? +lim : 3
-      page = page ? +page : 1
-      keyword = `%${keyword}%` || '%'
-      sort = sort || 'product_name ASC'
-      category = `%${category}%` || '%'
-      const offset = page * lim - lim
-      const dataCount = await productModel.getDataCount(keyword, category, sort)
+      let { page, limit, orderBy, keyword } = req.query
+
+      page = page ? +page : (page = 1)
+      limit = limit ? +limit : (limit = 12)
+      if (!keyword) {
+        keyword = ''
+      }
+      if (!orderBy) {
+        orderBy = 'product_id ASC'
+      }
+
+      const offset = page * limit - limit
+      const dataCount = await productModel.getDataCount(keyword, orderBy)
       const totalData = dataCount[0].total
-      const totalPage = Math.ceil(totalData / lim)
+      const totalPage = Math.ceil(totalData / limit)
       const pageInfo = {
         page,
         totalPage,
-        lim,
+        limit,
         totalData
       }
-      const result = await productModel.getDataAll(lim, offset, keyword, sort)
+      const result = await productModel.getDataAll(
+        limit,
+        offset,
+        keyword,
+        orderBy
+      )
       // client.setex(
       //   `getproduct:${JSON.stringify(req.query)}`,
       //   3600,
       //   JSON.stringify({ result, pageInfo })
       // )
 
-      return helper.response(res, 200, 'Success get data', result, pageInfo)
+      return helper.response(
+        res,
+        200,
+        'Success get all data product',
+        result,
+        pageInfo
+      )
     } catch (error) {
       return helper.response(res, 400, 'Bad request')
     }
@@ -49,8 +65,7 @@ module.exports = {
         return helper.response(res, 404, `Failed! Data by id ${id} Not Found`)
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   postProduct: async (req, res) => {
@@ -67,12 +82,9 @@ module.exports = {
         product_base_price: parseInt(productPrice),
         product_category: productCategory,
         product_desc: productDesc,
-        product_size: productSize,
-        product_image: req.file ? req.file.filename : ''
+        product_size: productSize
       }
-      console.log(setData)
       const result = await productModel.createData(setData)
-      // console.log(result)
       return helper.response(res, 200, 'Succes Create Product', result)
     } catch (error) {
       console.log(error)
@@ -99,10 +111,7 @@ module.exports = {
       }
       const dataToUpdate = await productModel.getDataById(id)
       if (dataToUpdate.length > 0) {
-        // console.log(setData)
         const result = await productModel.updateData(setData, id)
-
-        // console.log(result)
         return helper.response(res, 200, 'Succes Create Product', result)
       } else {
         return helper.response(res, 404, 'Failed! Data not Found')
@@ -138,8 +147,7 @@ module.exports = {
         return helper.response(res, 404, 'Failed! No Image Is Updated')
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
 
@@ -148,15 +156,8 @@ module.exports = {
     try {
       let { page, limit, category, orderBy, keyword } = req.query
 
-      // keyword = keyword ? +keyword : ''
       page = page ? +page : (page = 1)
-      limit = limit ? +limit : (limit = 5)
-      // if (!page) {
-      //   page = 1
-      // }
-      // if (!limit) {
-      //   limit = 20
-      // }
+      limit = limit ? +limit : (limit = 12)
       if (!category) {
         category = ''
       }
