@@ -82,7 +82,8 @@ module.exports = {
         product_base_price: parseInt(productPrice),
         product_category: productCategory,
         product_desc: productDesc,
-        product_size: productSize
+        product_size: productSize,
+        product_image: req.file ? req.file.filename : ''
       }
       const result = await productModel.createData(setData)
       return helper.response(res, 200, 'Succes Create Product', result)
