@@ -8,7 +8,7 @@ const promoController = require('./promoController')
 Route.get('/', authMiddleware.authentication, promoController.getDataAll)
 Route.get(
   '/by-id/:id',
-  authMiddleware.authentication,
+  // authMiddleware.authentication,
   promoController.getDataById
 )
 Route.patch(

@@ -8,6 +8,11 @@ Route.get(
   authentication,
   invoiceController.getInvoice
 )
+Route.get(
+  '/history/:id',
+  // authentication,
+  invoiceController.getHistory
+)
 
 Route.delete(
   '/:id',

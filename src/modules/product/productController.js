@@ -1,7 +1,7 @@
 const helper = require('../../helpers/wrapper')
 const productModel = require('./productModel')
-const redis = require('redis')
-const client = redis.createClient()
+// const redis = require('redis')
+// const client = redis.createClient()
 const fs = require('fs')
 
 require('dotenv').config()
@@ -25,18 +25,12 @@ module.exports = {
         lim,
         totalData
       }
-      const result = await productModel.getDataAll(
-        lim,
-        offset,
-        keyword,
-        sort,
-        category
-      )
-      client.setex(
-        `getproduct:${JSON.stringify(req.query)}`,
-        3600,
-        JSON.stringify({ result, pageInfo })
-      )
+      const result = await productModel.getDataAll(lim, offset, keyword, sort)
+      // client.setex(
+      //   `getproduct:${JSON.stringify(req.query)}`,
+      //   3600,
+      //   JSON.stringify({ result, pageInfo })
+      // )
 
       return helper.response(res, 200, 'Success get data', result, pageInfo)
     } catch (error) {
@@ -73,9 +67,10 @@ module.exports = {
         product_base_price: parseInt(productPrice),
         product_category: productCategory,
         product_desc: productDesc,
-        product_size: productSize
+        product_size: productSize,
+        product_image: req.file ? req.file.filename : ''
       }
-      // console.log(setData)
+      console.log(setData)
       const result = await productModel.createData(setData)
       // console.log(result)
       return helper.response(res, 200, 'Succes Create Product', result)
@@ -156,8 +151,20 @@ module.exports = {
       // keyword = keyword ? +keyword : ''
       page = page ? +page : (page = 1)
       limit = limit ? +limit : (limit = 5)
+      // if (!page) {
+      //   page = 1
+      // }
+      // if (!limit) {
+      //   limit = 20
+      // }
+      if (!category) {
+        category = ''
+      }
       if (!orderBy) {
         orderBy = 'product_id ASC'
+      }
+      if (!keyword) {
+        keyword = ''
       }
       const totalData = await productModel.countData(keyword, category)
       const totalPage = Math.ceil(totalData / limit)
@@ -188,8 +195,6 @@ module.exports = {
         )
       }
     } catch (error) {
-      console.log(req.query)
-      console.log(error)
       return helper.response(res, 400, 'Bad request', error)
     }
   },

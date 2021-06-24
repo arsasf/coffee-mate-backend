@@ -111,5 +111,21 @@ module.exports = {
       console.log(error)
       return helper.response(res, 400, 'Bad request')
     }
+  },
+  getDataByIdUser: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await orderModel.getDataByIdUser(id)
+      // client.set(`getUserid:${id}`, JSON.stringify(result))
+      if (result.length > 0) {
+        // client.set(`getUserid:${id}`, JSON.stringify(result))
+        return helper.response(res, 200, `Success Get Data by id ${id}`, result)
+      } else {
+        return helper.response(res, 404, `Failed! Data by id ${id} Not Found`)
+      }
+    } catch (error) {
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
+    }
   }
 }

@@ -22,5 +22,9 @@ Route.patch(
   authMiddleware.authentication,
   orderController.updateOrder
 )
-
+Route.get(
+  '/by-id-user/:id',
+  authMiddleware.authentication,
+  orderController.getDataByIdUser
+)
 module.exports = Route
