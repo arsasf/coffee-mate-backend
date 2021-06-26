@@ -41,7 +41,8 @@ module.exports = {
         promo_desc: promoDesc,
         promo_discount: promoDiscountpersent,
         promo_expire_start: promoExpiredStart,
-        promo_expire_end: promoExpiredEnd
+        promo_expire_end: promoExpiredEnd,
+        promo_image: req.file ? req.file.filename : ''
       }
       console.log(setData)
       const result = await promoModel.createData(setData)
