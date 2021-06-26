@@ -1,7 +1,6 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-
   getInvoice: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -25,6 +24,26 @@ module.exports = {
     })
   },
 
+  getTotalPerDayByWeek: (time, day) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT SUM(invoice_sub_total) AS total, WEEKDAY(invoice_created_at) AS day FROM invoice WHERE WEEK(invoice_created_at) = WEEK('${time}') AND WEEKDAY(invoice_created_at) = ${day}`,
+        (error, result) => {
+          if (!error) {
+            const { day, total } = result[0]
+            const newResult = {
+              day: !day ? null : day,
+              total: !total ? 0 : total
+            }
+            resolve(newResult)
+          } else {
+            reject(error)
+          }
+        }
+      )
+    })
+  },
+
   deleteInvoice: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -36,5 +55,4 @@ module.exports = {
       )
     })
   }
-
 }
