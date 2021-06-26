@@ -23,7 +23,6 @@ module.exports = {
       )
     })
   },
-
   getTotalPerDayByWeek: (time, day) => {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -37,13 +36,12 @@ module.exports = {
             }
             resolve(newResult)
           } else {
-            reject(error)
+            reject(new Error(error))
           }
         }
       )
     })
   },
-
   deleteInvoice: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(

@@ -1,10 +1,8 @@
 const helper = require('../../helpers/wrapper')
 const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
 const userModel = require('./userModel')
 // const nodemailer = require('nodemailer')
 const fs = require('fs')
-
 require('dotenv').config()
 
 module.exports = {
@@ -47,8 +45,7 @@ module.exports = {
         return helper.response(res, 404, 'Failed! No Image Is Updated')
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   deleteImage: async (req, res) => {
@@ -76,8 +73,7 @@ module.exports = {
         return helper.response(res, 404, 'Failed! No Image Is Updated')
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   getDataById: async (req, res) => {
@@ -91,15 +87,13 @@ module.exports = {
         return helper.response(res, 404, `Failed! Data by id ${id} Not Found`)
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   updateData: async (req, res) => {
     try {
       const { id } = req.params
       const getDataId = await userModel.getDataById(id)
-      // console.log(getDataId[0])
       let {
         userDisplay,
         userEmail,
@@ -157,7 +151,6 @@ module.exports = {
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
-      // console.log(error)
     }
   },
   updatePasswordUser: async (req, res) => {
@@ -172,7 +165,6 @@ module.exports = {
           userNewPassword,
           checkPassword[0].user_password
         )
-        // console.log(checkPassword, comparePassword)
         if (comparePassword) {
           return helper.response(
             res,
@@ -204,7 +196,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      // console.log(error)
       return helper.response(res, 408, 'Bad Request', error)
     }
   }

@@ -5,25 +5,20 @@ const { authentication } = require('../../middlewares/auth')
 const userController = require('./userController')
 
 Route.get(userController.getDataAll)
-
 Route.get('/by-id/:id', authentication, userController.getDataById)
-
 Route.patch('/img/:id', authentication, uploadFile, userController.updateImage)
-
 Route.patch(
   '/delete-img/:id',
   authentication,
   uploadFile,
   userController.deleteImage
 )
-
 Route.patch(
   '/update-profile/:id',
   authentication,
   uploadFile,
   userController.updateData
 )
-
 Route.patch(
   '/update-password/:id',
   authentication,
