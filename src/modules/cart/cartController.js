@@ -12,7 +12,7 @@ module.exports = {
         user_id: userId,
         product_id: productId,
         product_qty: parseInt(productQty),
-        product_sub_total: parseInt(productPrice) * parseInt(productQty),
+        product_sub_total: parseInt(productPrice),
         product_size: productSize
       }
       console.log(setData)
