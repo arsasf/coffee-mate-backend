@@ -6,7 +6,7 @@ const Route = express.Router()
 Route.post('/account/verify/:id', authController.verificationUser)
 Route.post('/register', authController.register)
 Route.post('/login', authController.login)
-Route.patch('/req-otp', authController.reqOtp)
+Route.post('/req-otp', authController.reqOtp)
 Route.patch('/reset-password', authController.resetPassword)
 
 module.exports = Route
