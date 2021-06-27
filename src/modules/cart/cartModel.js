@@ -44,7 +44,7 @@ module.exports = {
   getDataByIdUser: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT user.user_id,user.user_name, user.user_address,user.user_phone, product.product_name, product.product_image, product.product_size, product.product_base_price, cart.product_qty, cart.product_sub_total , cart.product_size FROM user JOIN cart ON user.user_id = cart.user_id  JOIN product ON cart.product_id = product.product_id WHERE cart.user_id = ?',
+        'SELECT user.user_id,user.user_name, user.user_address,user.user_phone, product.product_name, product.product_image,  product.product_size, product.product_base_price, cart.product_id, cart.product_qty, cart.product_sub_total , cart.product_size FROM user JOIN cart ON user.user_id = cart.user_id  JOIN product ON cart.product_id = product.product_id WHERE cart.user_id = ?',
         id,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))

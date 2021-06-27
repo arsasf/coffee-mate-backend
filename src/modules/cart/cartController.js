@@ -27,6 +27,7 @@ module.exports = {
     try {
       const { id } = req.params
       const result = await cartModel.getDataByIdUser(id)
+      console.log(result)
       // client.set(`getUserid:${id}`, JSON.stringify(result))
       if (result.length > 0) {
         // client.set(`getUserid:${id}`, JSON.stringify(result))

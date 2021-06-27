@@ -1,16 +1,23 @@
 const helper = require('../../helpers/wrapper')
 const orderModel = require('./orderModel')
 const cartModel = require('../cart/cartModel')
-const promoModel = require('../promo/promoModel')
+// const promoModel = require('../promo/promoModel')
 
 module.exports = {
   postOrder: async (req, res) => {
     try {
       console.log(req.decodeToken)
       const id = req.decodeToken.user_id
-      const { paymentMethod, promoCode } = req.body
+      const {
+        paymentMethod,
+        promoCode,
+        discount,
+        totalPriceProduct,
+        totalOrders,
+        tax
+      } = req.body
       const invoiceId = Math.floor(1000 + Math.random() * 9000)
-      const items = await cartModel.getCart(id)
+      const items = await cartModel.getDataByIdUser(id)
       if (items.length === 0) {
         return helper.response(
           res,
@@ -18,66 +25,43 @@ module.exports = {
           'Please choose product, before checkout !'
         )
       } else {
-        let total = 0
-        let discount = 0
-        console.log(id, paymentMethod, promoCode)
-        for (const i of items) {
-          total = total + i.product_sub_total
-        }
-
-        // *** promo check
-        const promo = await promoModel.getPromoByCode(promoCode)
-        console.log(promo)
-        const today = new Date(Date.now())
-        const discAmount = parseInt(promo[0].promo_discount)
-        const minPurchase = promo[0].promo_min_price
-        const maxDisc = promo[0].promo_max_discount
-        const promoStart = promo[0].promo_expire_start
-        const promoEnd = promo[0].promo_expire_end
-
-        if (promo.length > 0 && today < promoEnd && today > promoStart) {
-          if (total > minPurchase) {
-            discount = (total * discAmount) / 100
-          }
-          if (discount > maxDisc) {
-            discount = maxDisc
-          }
-        }
-
-        console.log(discount)
-        console.log(total)
         // *** seed to invoice
-        const tax = total * 0.1
-        console.log(tax)
 
         const seedToInvoice = {
           invoice_code: `CM-${invoiceId}`,
           user_id: id,
           promo_code: promoCode,
           invoice_discount: discount,
-          invoice_all_product_price: total,
+          invoice_all_product_price: totalPriceProduct,
           invoice_tax: tax,
-          invoice_sub_total: total + tax - discount
+          invoice_sub_total: totalOrders,
+          invoice_status: 'pending'
         }
         console.log(seedToInvoice)
-        const result = await orderModel.postInvoice(seedToInvoice)
+        await orderModel.postInvoice(seedToInvoice)
         const invoice = await orderModel.getInvoiceByCode(`CM-${invoiceId}`)
 
         // *** seed to orders
         for (const i of items) {
+          console.log(i.product_image)
           const setData = {
             invoice_id: invoice[0].invoice_id,
             user_id: invoice[0].user_id,
             product_id: i.product_id,
             product_qty: i.product_qty,
+            product_size: i.product_size,
+            product_image: i.product_image,
+            orders_discount: discount,
+            orders_tax: tax,
+            orders_all_product_price: totalPriceProduct,
             orders_total_price: invoice[0].invoice_sub_total,
             orders_payment_method: paymentMethod,
-            orders_status: 'Pending'
+            orders_status: 'pending'
           }
           await orderModel.postOrders(setData)
         }
 
-        await cartModel.deleteCart(id)
+        const result = await cartModel.deleteCart(id)
         return helper.response(res, 200, 'Order placed', result)
       }
     } catch (error) {
