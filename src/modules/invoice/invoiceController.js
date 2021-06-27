@@ -2,7 +2,6 @@ const helper = require('../../helpers/wrapper')
 const invoiceModel = require('./invoiceModel')
 
 module.exports = {
-
   getInvoice: async (req, res) => {
     try {
       const id = req.decodeToken.user_id
@@ -28,11 +27,9 @@ module.exports = {
         return helper.response(res, 200, 'Success getting invoices', invoice)
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad request', error)
     }
   },
-
   deleteInvoice: async (req, res) => {
     try {
       const { id } = req.params
@@ -42,6 +39,25 @@ module.exports = {
     } catch (error) {
       return helper.response(res, 400, 'Bad request', error)
     }
-  }
+  },
+  getTotalPerDayByWeek: async (req, res) => {
+    try {
+      const { time } = req.query
+      const days = [0, 1, 2, 3, 4, 5, 6]
 
+      const totalPerDay = []
+      for (const day of days) {
+        const result = await invoiceModel.getTotalPerDayByWeek(time, day)
+        totalPerDay.push(result)
+      }
+      return helper.response(
+        res,
+        200,
+        'Success get total per day by selected week',
+        totalPerDay
+      )
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', error)
+    }
+  }
 }
