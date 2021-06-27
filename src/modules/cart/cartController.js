@@ -4,6 +4,19 @@ const cartModel = require('./cartModel')
 require('dotenv').config()
 
 module.exports = {
+  getDataAll: async (req, res) => {
+    try {
+      const result = await cartModel.getDataAll()
+      if (result.length > 0) {
+        // client.set(`getUserid:${id}`, JSON.stringify(result))
+        return helper.response(res, 200, 'Success Get Data All', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Data')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   postCart: async (req, res) => {
     try {
       const { userId, productId, productPrice, productQty, productSize } =

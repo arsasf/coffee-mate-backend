@@ -10,7 +10,7 @@ Route.get(
 )
 Route.get(
   '/history/:id',
-  // authentication,
+  authentication,
   invoiceController.getHistory
 )
 

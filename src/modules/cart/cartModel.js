@@ -1,6 +1,13 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
+  getDataAll: () => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT product.product_image, product.product_name, product.product_size, product.product_base_price, invoice.invoice_discount, invoice.invoice_sub_total, invoice.invoice_tax, orders.product_qty, orders.orders_payment_method, orders.orders_status,user.user_name, user.user_address, user.user_phone FROM orders JOIN invoice ON orders.invoice_id = invoice.invoice_id JOIN product ON product.product_id = orders.product_id JOIN user ON user.user_id = invoice.user_id WHERE orders.orders_status = "pending"', (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      })
+    })
+  },
   createData: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query('INSERT INTO cart SET ?', setData, (error, result) => {

@@ -11,7 +11,7 @@ Route.get('/', productController.getAllProduct)
 Route.patch(
   '/img/:id',
   authentication,
-  isAdmin,
+  // isAdmin,
   uploadFile,
   productController.updateImage
 )
