@@ -1,4 +1,5 @@
 const connection = require('../../config/mysql')
+const midtransClient = require('midtrans-client')
 
 module.exports = {
   postOrders: (setData) => {
@@ -141,6 +142,37 @@ module.exports = {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
+    })
+  },
+  postOrderMidtrans: ({ orderId, orderAmount }) => {
+    return new Promise((resolve, reject) => {
+      const snap = new midtransClient.Snap({
+        isProduction: false,
+        serverKey: 'SB-Mid-server-cQ2SdW4dl4T4ETGWBbXzM6BS',
+        clientKey: 'SB-Mid-client-Br8qu0hv-PGs4oyU'
+      })
+      const parameter = {
+        transaction_details: {
+          order_id: orderId,
+          gross_amount: orderAmount
+        },
+        credit_card: {
+          secure: true
+        }
+      }
+      snap
+        .createTransaction(parameter)
+        .then((transaction) => {
+          // transaction token
+          const transactionToken = transaction.token
+          console.log('transaction:', transaction)
+          console.log('transactionToken:', transactionToken)
+          resolve(transaction.redirect_url)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(error)
+        })
     })
   }
 }

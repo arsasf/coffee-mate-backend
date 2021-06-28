@@ -61,13 +61,37 @@ module.exports = {
           }
           await orderModel.postOrders(setData)
         }
-
-        const result = await cartModel.deleteCart(id)
-        return helper.response(res, 200, 'Order placed', result)
+        await cartModel.deleteCart(id)
+        if (paymentMethod === 'card' || paymentMethod === 'bank') {
+          const dataPayment = {
+            orderId: invoice[0].invoice_code,
+            orderAmount: invoice[0].invoice_sub_total
+          }
+          const result = await orderModel.postOrderMidtrans(dataPayment)
+          return helper.response(
+            res,
+            200,
+            'Success Order Please Confirm and Pay',
+            {
+              redirectUrl: result
+            }
+          )
+        } else {
+          return helper.response(res, 200, 'Success Order. Thank You')
+        }
       }
     } catch (error) {
       console.log(error)
       return helper.response(res, 400, 'Bad request', error)
+    }
+  },
+
+  postOrderNotifiation: async (req, res) => {
+    try {
+      // return helper.response(res, 200, 'Success Get Data All Orders', result)
+    } catch (error) {
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
 

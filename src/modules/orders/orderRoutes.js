@@ -11,6 +11,11 @@ Route.post(
   // authMiddleware.isAdmin,
   orderController.postOrder
 )
+Route.post(
+  '/midtrans-notification',
+  authMiddleware.authentication,
+  orderController.postOrderNotifiation
+)
 
 Route.patch(
   '/update/:id',
