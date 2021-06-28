@@ -3,12 +3,7 @@ const Route = express.Router()
 const authMiddleware = require('../../middlewares/auth')
 const orderController = require('./orderController')
 
-Route.get(
-  '/',
-  (req, res) => {
-    res.send('hello world')
-  }
-)
+Route.get('/', authMiddleware.authentication, orderController.getDataAllOrders)
 
 Route.post(
   '/',
@@ -26,5 +21,11 @@ Route.get(
   '/by-id-user/:id',
   authMiddleware.authentication,
   orderController.getDataByIdUser
+)
+
+Route.patch(
+  '/update-coupon/:id',
+  authMiddleware.authentication,
+  orderController.updateUserCoupon
 )
 module.exports = Route

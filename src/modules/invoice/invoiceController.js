@@ -6,7 +6,7 @@ module.exports = {
     try {
       const id = req.decodeToken.user_id
       const invoice = await invoiceModel.getInvoice(id)
-
+      console.log(invoice)
       if (invoice.length === 0) {
         return helper.response(res, 404, 'No invoice for this account')
       } else {

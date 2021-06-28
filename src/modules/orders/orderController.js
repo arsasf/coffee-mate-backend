@@ -51,6 +51,7 @@ module.exports = {
             product_qty: i.product_qty,
             product_size: i.product_size,
             product_image: i.product_image,
+            product_sub_total: i.product_sub_total,
             orders_discount: discount,
             orders_tax: tax,
             orders_all_product_price: totalPriceProduct,
@@ -74,14 +75,20 @@ module.exports = {
     try {
       const { id } = req.params
       const setData = {
-        orders_status: 'DONE',
+        orders_status: 'done',
         orders_updated_at: new Date(Date.now())
       }
 
+      const setDataInvoice = {
+        invoice_status: 'done',
+        invoice_updated_at: new Date(Date.now())
+      }
       const isExist = await orderModel.getInvoiceById(id)
+      console.log(isExist)
       if (isExist.length === 0) {
         return helper.response(res, 404, 'Cannot update empty data')
       } else {
+        await orderModel.updateInvoice(setDataInvoice, id)
         const result = await orderModel.updateOrder(setData, id)
 
         return helper.response(
@@ -110,6 +117,30 @@ module.exports = {
     } catch (error) {
       // return helper.response(res, 400, 'Bad Request', error)
       console.log(error)
+    }
+  },
+  getDataAllOrders: async (req, res) => {
+    try {
+      const result = await orderModel.getDataAllOrders()
+      return helper.response(res, 200, 'Success Get Data All Orders', result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+      // console.log(error)
+    }
+  },
+  updateUserCoupon: async (req, res) => {
+    try {
+      const { id } = req.params
+      const setData = {
+        user_coupon: 'yes',
+        user_updated_at: new Date(Date.now())
+      }
+      const result = await orderModel.updateUserCoupon(setData, id)
+
+      return helper.response(res, 200, 'Success add coupon', result)
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad request')
     }
   }
 }

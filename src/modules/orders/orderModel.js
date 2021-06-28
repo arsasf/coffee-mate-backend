@@ -82,11 +82,61 @@ module.exports = {
       )
     })
   },
+  updateInvoice: (setData, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'UPDATE invoice SET ? WHERE invoice_id = ?',
+        [setData, id],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id: id,
+              ...setData
+            }
+            resolve(newResult)
+          } else {
+            // console.log(error)
+            reject(new Error(error))
+          }
+        }
+      )
+    })
+  },
+  updateUserCoupon: (setData, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'UPDATE invoice SET ? WHERE user_id = ?',
+        [setData, id],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id: id,
+              ...setData
+            }
+            resolve(newResult)
+          } else {
+            // console.log(error)
+            reject(new Error(error))
+          }
+        }
+      )
+    })
+  },
   getDataByIdUser: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
         'SELECT orders.orders_id,invoice.invoice_code, orders.user_id, invoice.invoice_sub_total, orders.orders_status, product.product_image FROM orders JOIN product ON orders.product_id = product.product_id JOIN invoice ON orders.invoice_id = invoice.invoice_id WHERE invoice.user_id = ?',
         id,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  getDataAllOrders: () => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT * FROM orders JOIN user ON user.user_id = orders.user_id WHERE orders.orders_status = "pending" ORDER BY orders.invoice_id',
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
