@@ -18,6 +18,7 @@ app.use(helmet())
 app.use(morgan('dev'))
 app.use('/backend5/api/v1', routerNavigation)
 app.use('/backend5/api', express.static('src/uploads'))
+app.use('/backend5/api', express.static('public'))
 
 app.listen(port, () => {
   console.log(`App is listening on port ${port}`)
