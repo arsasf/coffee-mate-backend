@@ -61,12 +61,12 @@ module.exports = {
           }
           await orderModel.postOrders(setData)
         }
-        await cartModel.deleteCart(id)
         if (paymentMethod === 'card' || paymentMethod === 'bank') {
           const dataPayment = {
             orderId: invoice[0].invoice_code,
             orderAmount: invoice[0].invoice_sub_total
           }
+          await cartModel.deleteCart(id)
           const result = await orderModel.postOrderMidtrans(dataPayment)
           return helper.response(
             res,
@@ -77,6 +77,7 @@ module.exports = {
             }
           )
         } else if (paymentMethod === 'cod') {
+          await cartModel.deleteCart(id)
           return helper.response(res, 200, 'Success Order. Thank You')
         } else {
           return helper.response(res, 400, 'Please choose payment method !')

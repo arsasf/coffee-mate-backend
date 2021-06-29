@@ -2,9 +2,9 @@
   <p align="center">
     <a href="link_deploy">View Demo</a>
     ·
-    <a href="https://curiouscat.qa/julianskix">Report Bug</a>
+    <a href="https://github.com/arsasf/coffee-mate-backend/issues">Report Bug</a>
     ·
-    <a href="https://curiouscat.qa/julianskix">Request Feature</a>
+    <a href="https://github.com/arsasf/coffee-mate-backend/pulls">Request Feature</a>
   </p>
 
 ![Image Banner](src/uploads/banner.jpg)
