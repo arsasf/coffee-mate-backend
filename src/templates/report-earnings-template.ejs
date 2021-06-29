@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        body {
+          font-family: "Roboto", sans-serif;
+        }
+        h3 {
+          font-size: 36px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th {
+          background-color: #412719;
+          color: #ffffff;
+          font-size: 20px;
+          font-weight: 700;
+        }
+        td {
+          font-size: 18px;
+        }
+        td, th {
+          padding: 10px;
+          text-align: left;
+        }
+        </style>
+    </head>
+    <body>
+        <div style="width: 85%; margin: 0 7.5%;">
+            <div style="text-align: center; padding-left: 50px;">            
+                <h3>Coffee Mate - Earnings Report</h5>
+                <table>
+                  <th>DAY</th>
+                  <th>TOTAL</th>
+                <% if (earnings.length > 0) { %>
+                  <% const day = ["Monday", "Tuesday", "Wednessday", "Thursday", "Friday", "Saturday", "Sunday"]%>
+                    <% for(let i = 0; i < earnings.length; i++) {%>
+                       <tr><td><%= day[i] %></td><td style="font-weight: 700;">IDR <%= earnings[i].total %></td></tr>
+                    <%  };%>
+                <% }%>
+                </table>
+             </div>
+        </div>
+    </body>
+</html>
