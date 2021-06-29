@@ -106,7 +106,7 @@ module.exports = {
   updateUserCoupon: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'UPDATE invoice SET ? WHERE user_id = ?',
+        'UPDATE user SET ? WHERE user_id = ?',
         [setData, id],
         (error, result) => {
           if (!error) {

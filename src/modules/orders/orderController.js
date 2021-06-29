@@ -76,8 +76,10 @@ module.exports = {
               redirectUrl: result
             }
           )
-        } else {
+        } else if (paymentMethod === 'cod') {
           return helper.response(res, 200, 'Success Order. Thank You')
+        } else {
+          return helper.response(res, 400, 'Please choose payment method !')
         }
       }
     } catch (error) {
